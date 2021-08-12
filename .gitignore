@@ -48,3 +48,7 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+*.idea
+.vscode
+out/
+.iml
