@@ -19,7 +19,9 @@ public class TestArrayDequeGold {
                 studentAD.addFirst(val);
                 solutionAD.addFirst(val);
                 assertEquals(sb.toString(), solutionAD.size(), studentAD.size());
-                assertEquals(sb.toString(), solutionAD.get(0), studentAD.get(0));
+               for (int j = 0; j < solutionAD.size(); j++) {
+                   assertEquals(sb.toString(), solutionAD.get(j), studentAD.get(j));
+                }
             } else if (flag == 1) {
                 int val = StdRandom.uniform(100);
                 String str = String.format("addLast(%s)\n",String.valueOf(val));
@@ -27,8 +29,9 @@ public class TestArrayDequeGold {
                 studentAD.addLast(val);
                 solutionAD.addLast(val);
                 assertEquals(sb.toString(), solutionAD.size(), studentAD.size());
-                assertEquals(sb.toString(), solutionAD.get(solutionAD.size() - 1),
-                        studentAD.get(studentAD.size() - 1));
+                for (int j = 0; j < solutionAD.size(); j++) {
+                    assertEquals(sb.toString(), solutionAD.get(j), studentAD.get(j));
+                }
             } else if (flag == 2 && studentAD.size() != 0) {
                 String str = "removeFirst()\n";
                 sb.append(str);
@@ -36,6 +39,9 @@ public class TestArrayDequeGold {
                 Integer solutionR = solutionAD.removeFirst();
                 assertEquals(sb.toString(), solutionR, studentR);
                 assertEquals(sb.toString(), solutionAD.size(), studentAD.size());
+                for (int j = 0; j < solutionAD.size(); j++) {
+                    assertEquals(sb.toString(), solutionAD.get(j), studentAD.get(j));
+                }
             } else if (flag == 3 && studentAD.size() != 0) {
                 String str = "removeLast()\n";
                 sb.append(str);
@@ -43,8 +49,10 @@ public class TestArrayDequeGold {
                 Integer solutionR = solutionAD.removeLast();
                 assertEquals(sb.toString(), solutionR, studentR);
                 assertEquals(sb.toString(), solutionAD.size(), studentAD.size());
+                for (int j = 0; j < solutionAD.size(); j++) {
+                    assertEquals(sb.toString(), solutionAD.get(j), studentAD.get(j));
+                }
             }
-
         }
     }
 }
