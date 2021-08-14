@@ -1,17 +1,35 @@
-package Map61B;
+package myMap61B;
 
 
 import org.junit.Test;
 // very important here to declare static
 import static org.junit.Assert.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class ArrayMap<K, V> implements Map61B<K, V> {
+public class ArrayMap<K, V> implements Map61B<K, V>, Iterable<K> {
     //
     private K[] keys;
     private V[] values;
     int size;
+    private class KeyIterator implements Iterator<K> {
+        private int pos;
+        public KeyIterator() {
+            pos = 0;
+        }
+        public boolean hasNext() {
+            return pos < size;
+        }
+        public K next() {
+            K returnVal = keys[pos];
+            pos += 1;
+            return returnVal;
+        }
+    }
+    public Iterator<K> iterator() {
+        return new KeyIterator();
+    }
 
     public ArrayMap() {
         keys = (K[]) new Object[8];
@@ -47,6 +65,15 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
     @Override
     public V get(K key) {
         int index = keyIndex(key);
+        try {
+
+            if (index == -1) {
+                //Object -> Throwable -> Exception
+                throw new IllegalArgumentException("The key provided " + key + " is not in map");
+            }
+        } catch (Exception e) {
+            System.out.println("index out of boundary" + e);
+        }
         return values[index];
     }
     @Override
@@ -57,7 +84,7 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
     public List<K> keys() {
         // declarer using abstract datatype and instantiate using specific implementation.
         List<K> keylist = new ArrayList<>();
-        for ( int i = 0; i < size; i+= 1) {
+        for (int i = 0; i < size; i += 1) {
             keylist.add(keys[i]);
         }
         return keylist;
@@ -65,7 +92,7 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
     @Test
     public void test() {
         ArrayMap<Integer, Integer> am = new ArrayMap<Integer, Integer>();
-        am.put(2,5);
+        am.put(2, 5);
         int expected = 5;
         // no assertEquals version for Integer -> need to witten to long or object
         assertEquals((Integer) expected, am.get(2));

@@ -1,16 +1,15 @@
 /**
  * Class to demonstrate how generic methods work in Java.
  */
-package Map61B;
+package myMap61B;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
 
 public class MapHelper {
     // Here we should use generic methods. Since se don't need to instantiate this class
-    public static <K,V> V get(Map61B<K, V> sim, K key) {
+    public static <K, V> V get(Map61B<K, V> sim, K key) {
         // K, V only works here.
         if (sim.containsKey(key)) {
             return sim.get(key);
