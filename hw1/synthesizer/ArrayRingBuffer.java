@@ -75,12 +75,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * covered Monday.
      */
     public T dequeue() throws RuntimeException {
-        try {
-            if (isEmpty()) {
-                throw new RuntimeException("Ring Buffer Underflow");
-            }
-        } catch (RuntimeException e) {
-            return null;
+        if (isEmpty()) {
+            throw new RuntimeException("Ring Buffer Underflow");
         }
         T result = rb[first];
         first = pinnext(first);
@@ -92,12 +88,8 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * Return oldest item, but don't remove it.
      */
     public T peek() throws RuntimeException {
-        try {
-            if (isEmpty()) {
-                throw new RuntimeException("Ring Buffer Underflow");
-            }
-        } catch (RuntimeException e) {
-            return null;
+        if (isEmpty()) {
+            throw new RuntimeException("Ring Buffer Underflow");
         }
         return rb[first];
     }
