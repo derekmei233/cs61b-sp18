@@ -7,21 +7,19 @@ import static edu.princeton.cs.algs4.StdRandom.*;
 
 public class PercolationStats {
     private final int units;
-    private final int times;
     private PercolationFactory pF;
     private int[] mem;
 
     public PercolationStats(int N, int T, PercolationFactory pf) {
         // perform T independent experiments on an N-by-N grid
         units = N;
-        times = T;
         pF = pf;
         mem = new int[T];
         Percolation percoSys;
         int count;
         for (int i = 0; i < T; i++) {
             int[] que = creatShuffledQueue();
-            percoSys = pf.make(N);
+            percoSys = pF.make(N);
             count = 0;
             while (!percoSys.percolates()) {
                 percoSys.open(que[count] / units, que[count] % units);
@@ -32,6 +30,9 @@ public class PercolationStats {
     }
     private int[] creatShuffledQueue() {
         int[] que = new int[units * units];
+        for (int i = 0; i < que.length; i++) {
+            que[i] = i;
+        }
         shuffle(que);
         return que;
     }
