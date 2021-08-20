@@ -2,7 +2,6 @@ package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.net.CookieHandler;
 
 public class Percolation {
     private final int units;
@@ -11,7 +10,7 @@ public class Percolation {
     private int[] sites;
     private int[] full;
 
-    public Percolation(int N) throws IllegalArgumentException{
+    public Percolation(int N) throws IllegalArgumentException {
         // create N-N grid, with all sites initially blocked
         if (N <= 0) {
             throw new IllegalArgumentException("N should greater than 0");
@@ -44,7 +43,7 @@ public class Percolation {
             uf.union(cordToIndex(row, col - 1), cordToIndex(row, col));
         }
         if (col + 1 <= units - 1 && sites[cordToIndex(row, col + 1)] == 1) {
-            uf.union(cordToIndex(row, col + 1), cordToIndex(row ,col));
+            uf.union(cordToIndex(row, col + 1), cordToIndex(row, col));
         }
     }
 
@@ -73,7 +72,7 @@ public class Percolation {
             return true;
         }
         int pos = uf.find(cordToIndex(row, col));
-        for (int i = 0; i < units; i ++) {
+        for (int i = 0; i < units; i++) {
             if (uf.find(i) == pos) {
                 full[row * units + col] = 1;
                 return true;
