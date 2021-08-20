@@ -9,6 +9,7 @@ public class Percolation {
     private int numOfOpen;
     private WeightedQuickUnionUF uf;
     private int[] sites;
+    private int[] full;
 
     public Percolation(int N) throws IllegalArgumentException{
         // create N-N grid, with all sites initially blocked
@@ -19,6 +20,7 @@ public class Percolation {
         numOfOpen = 0;
         uf = new WeightedQuickUnionUF(units * units);
         sites = new int[units * units];
+        full = new int[units * units];
     }
 
     private void checkIndex(int row, int col) throws IndexOutOfBoundsException {
@@ -49,6 +51,9 @@ public class Percolation {
     public void open(int row, int col) {
         // open the site (row, col) if it is not open already
         checkIndex(row, col);
+        if (sites[cordToIndex(row, col)] == 1) {
+            return;
+        }
         sites[cordToIndex(row, col)] = 1;
         numOfOpen += 1;
         neighboring(row, col);
@@ -64,9 +69,13 @@ public class Percolation {
         if (sites[cordToIndex(row, col)] == 0) {
             return false;
         }
+        if (full[row * units + col] == 1) {
+            return true;
+        }
         int pos = uf.find(cordToIndex(row, col));
         for (int i = 0; i < units; i ++) {
             if (uf.find(i) == pos) {
+                full[row * units + col] = 1;
                 return true;
             }
         }
