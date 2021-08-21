@@ -36,8 +36,8 @@ public class Percolation {
 
     private void neighboring(int row, int col) {
         int check = 0;
-        if (full[cordToIndex(row - 1, col)] == 1 || full[cordToIndex(row + 1, col)] == 1 ||
-                full[cordToIndex(row, col - 1)] == 1 || full[cordToIndex(row, col + 1)] == 1) {
+        if (full[cordToIndex(row - 1, col)] == 1 || full[cordToIndex(row + 1, col)] == 1
+                || full[cordToIndex(row, col - 1)] == 1 || full[cordToIndex(row, col + 1)] == 1) {
             check = 1;
         }
 

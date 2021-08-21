@@ -12,7 +12,7 @@ public class PercolationStats {
 
     public PercolationStats(int N, int T, PercolationFactory pf) throws IllegalArgumentException {
         // perform T independent experiments on an N-by-N grid
-        if ( N <= 0 || T <= 0) {
+        if (N <= 0 || T <= 0) {
             throw new IllegalArgumentException("invalid parameters");
         }
         units = N;
