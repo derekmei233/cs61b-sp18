@@ -35,27 +35,37 @@ public class Percolation {
     }
 
     private void neighboring(int row, int col) {
+        int check = 0;
+        if (full[cordToIndex(row - 1, col)] == 1 || full[cordToIndex(row + 1, col)] == 1 ||
+                full[cordToIndex(row, col - 1)] == 1 || full[cordToIndex(row, col + 1)] == 1) {
+            check = 1;
+        }
+
         if (row - 1 >= 0 && sites[cordToIndex(row - 1, col)] == 1) {
             uf.union(cordToIndex(row - 1, col), cordToIndex(row, col));
-            if (full[cordToIndex(row - 1, col)] == 1) {
+            if (check == 1) {
+                full[cordToIndex(row - 1, col)] = 1;
                 full[cordToIndex(row, col)] = 1;
             }
         }
         if (row + 1 <= units - 1 && sites[cordToIndex(row + 1, col)] == 1) {
             uf.union(cordToIndex(row + 1, col), cordToIndex(row, col));
-            if (full[cordToIndex(row + 1, col)] == 1) {
+            if (check == 1) {
+                full[cordToIndex(row + 1, col)] = 1;
                 full[cordToIndex(row, col)] = 1;
             }
         }
         if (col - 1 >= 0 && sites[cordToIndex(row, col - 1)] == 1) {
             uf.union(cordToIndex(row, col - 1), cordToIndex(row, col));
-            if (full[cordToIndex(row, col - 1)] == 1) {
+            if (check == 1) {
+                full[cordToIndex(row, col + 1)] = 1;
                 full[cordToIndex(row, col)] = 1;
             }
         }
         if (col + 1 <= units - 1 && sites[cordToIndex(row, col + 1)] == 1) {
             uf.union(cordToIndex(row, col + 1), cordToIndex(row, col));
-            if (full[cordToIndex(row, col + 1)] == 1) {
+            if (check == 1) {
+                full[cordToIndex(row, col - 1)] = 1;
                 full[cordToIndex(row, col)] = 1;
             }
         }
