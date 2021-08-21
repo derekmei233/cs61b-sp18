@@ -9,6 +9,7 @@ public class Percolation {
     private WeightedQuickUnionUF uf;
     private int[] sites;
     private int[] full;
+    private int flag;
 
     public Percolation(int N) throws IllegalArgumentException {
         // create N-N grid, with all sites initially blocked
@@ -20,6 +21,7 @@ public class Percolation {
         uf = new WeightedQuickUnionUF(units * units);
         sites = new int[units * units];
         full = new int[units * units];
+        flag = 0;
     }
 
     private void checkIndex(int row, int col) throws IndexOutOfBoundsException {
@@ -35,15 +37,27 @@ public class Percolation {
     private void neighboring(int row, int col) {
         if (row - 1 >= 0 && sites[cordToIndex(row - 1, col)] == 1) {
             uf.union(cordToIndex(row - 1, col), cordToIndex(row, col));
+            if (full[cordToIndex(row - 1, col)] == 1) {
+                full[cordToIndex(row, col)] = 1;
+            }
         }
         if (row + 1 <= units - 1 && sites[cordToIndex(row + 1, col)] == 1) {
             uf.union(cordToIndex(row + 1, col), cordToIndex(row, col));
+            if (full[cordToIndex(row + 1, col)] == 1) {
+                full[cordToIndex(row, col)] = 1;
+            }
         }
         if (col - 1 >= 0 && sites[cordToIndex(row, col - 1)] == 1) {
             uf.union(cordToIndex(row, col - 1), cordToIndex(row, col));
+            if (full[cordToIndex(row, col - 1)] == 1) {
+                full[cordToIndex(row, col)] = 1;
+            }
         }
         if (col + 1 <= units - 1 && sites[cordToIndex(row, col + 1)] == 1) {
             uf.union(cordToIndex(row, col + 1), cordToIndex(row, col));
+            if (full[cordToIndex(row, col + 1)] == 1) {
+                full[cordToIndex(row, col)] = 1;
+            }
         }
     }
 
@@ -78,6 +92,14 @@ public class Percolation {
                 return true;
             }
         }
+        if (flag == 1) {
+            for (int j = 0; j < units; j++) {
+                if (uf.find(j + units * (units - 1)) == pos) {
+                    full[row * units + col] = 1;
+                    return true;
+                }
+            }
+        }
         return false;
     }
     public int numberOfOpenSites() {
@@ -86,8 +108,12 @@ public class Percolation {
     }
     public boolean percolates() {
         // does the system percolate?
+        if (flag == 1) {
+            return true;
+        }
         for (int i = 0; i < units; i++) {
             if (isFull(units - 1, i)) {
+                flag = 1;
                 return true;
             }
         }
