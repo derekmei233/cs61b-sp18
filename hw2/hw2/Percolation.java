@@ -36,8 +36,10 @@ public class Percolation {
 
     private void neighboring(int row, int col) {
         int check = 0;
-        if (full[cordToIndex(row - 1, col)] == 1 || full[cordToIndex(row + 1, col)] == 1
-                || full[cordToIndex(row, col - 1)] == 1 || full[cordToIndex(row, col + 1)] == 1) {
+        if ((row - 1 >= 0 && full[cordToIndex(row - 1, col)] == 1)
+                || (row + 1 <= units - 1 && full[cordToIndex(row + 1, col)] == 1)
+                || (col - 1 >= 0 && full[cordToIndex(row, col - 1)] == 1)
+                || (col - 1 >= 0 && full[cordToIndex(row, col + 1)] == 1)) {
             check = 1;
         }
 
@@ -58,14 +60,14 @@ public class Percolation {
         if (col - 1 >= 0 && sites[cordToIndex(row, col - 1)] == 1) {
             uf.union(cordToIndex(row, col - 1), cordToIndex(row, col));
             if (check == 1) {
-                full[cordToIndex(row, col + 1)] = 1;
+                full[cordToIndex(row, col - 1)] = 1;
                 full[cordToIndex(row, col)] = 1;
             }
         }
         if (col + 1 <= units - 1 && sites[cordToIndex(row, col + 1)] == 1) {
             uf.union(cordToIndex(row, col + 1), cordToIndex(row, col));
             if (check == 1) {
-                full[cordToIndex(row, col - 1)] = 1;
+                full[cordToIndex(row, col + 1)] = 1;
                 full[cordToIndex(row, col)] = 1;
             }
         }
@@ -100,14 +102,6 @@ public class Percolation {
             if (uf.find(i) == pos) {
                 full[row * units + col] = 1;
                 return true;
-            }
-        }
-        if (flag == 1) {
-            for (int j = 0; j < units; j++) {
-                if (uf.find(j + units * (units - 1)) == pos) {
-                    full[row * units + col] = 1;
-                    return true;
-                }
             }
         }
         return false;
