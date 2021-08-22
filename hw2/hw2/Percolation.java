@@ -39,7 +39,7 @@ public class Percolation {
         if ((row - 1 >= 0 && full[cordToIndex(row - 1, col)] == 1)
                 || (row + 1 <= units - 1 && full[cordToIndex(row + 1, col)] == 1)
                 || (col - 1 >= 0 && full[cordToIndex(row, col - 1)] == 1)
-                || (col - 1 >= 0 && full[cordToIndex(row, col + 1)] == 1)) {
+                || (col + 1 <= units - 1 && full[cordToIndex(row, col + 1)] == 1)) {
             check = 1;
         }
 
