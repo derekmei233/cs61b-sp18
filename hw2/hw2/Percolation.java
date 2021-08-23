@@ -90,6 +90,9 @@ public class Percolation {
     }
     public boolean percolates() {
         // does the system percolate?
+        if (units == 1) {
+            return sites[cordToIndex(0,0)] == 1;
+        }
         return uf.find(units * units) == uf.find(units * units + 1);
     }
     public static void main(String[] args) {
