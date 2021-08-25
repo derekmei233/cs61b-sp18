@@ -1,7 +1,5 @@
 package lab9;
 
-import edu.princeton.cs.algs4.Queue;
-
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
@@ -47,11 +45,17 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      *  or null if this map contains no mapping for the key.
      */
     private V getHelper(K key, Node p) {
-        if (p == null) return null;
+        if (p == null) {
+            return null;
+        }
         int cmp = key.compareTo(p.key);
-        if (cmp < 0) return getHelper(key, p.left);
-        else if (cmp > 0) return getHelper(key, p.right);
-        else return p.value;
+        if (cmp < 0) {
+            return getHelper(key, p.left);
+        } else if (cmp > 0) {
+            return getHelper(key, p.right);
+        } else {
+            return p.value;
+        }
     }
 
     /** Returns the value to which the specified key is mapped, or null if this
@@ -59,7 +63,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        if (key == null) throw new IllegalArgumentException("invalid key in get(): null");
+        if (key == null) {
+            throw new IllegalArgumentException("invalid key in get(): null");
+        }
         return getHelper(key, root);
     }
 
@@ -73,9 +79,13 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             return t;
         }
         int cmp = key.compareTo(p.key);
-        if (cmp < 0)  p.left = putHelper(key, value, p.left);
-        else if (cmp >0) p.right = putHelper(key, value, p.right);
-        else p.value = value;
+        if (cmp < 0) {
+            p.left = putHelper(key, value, p.left);
+        } else if (cmp > 0) {
+            p.right = putHelper(key, value, p.right);
+        } else {
+            p.value = value;
+        }
         return p;
     }
 
@@ -84,13 +94,17 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public void put(K key, V value) {
-        if (key == null) throw new IllegalArgumentException("invalid key in put(): null");
-        if (value == null) throw new IllegalArgumentException("invalid value in put(): null");
+        if (key == null) {
+            throw new IllegalArgumentException("invalid key in put(): null");
+        }
+        if (value == null) {
+            throw new IllegalArgumentException("invalid value in put(): null");
+        }
         if (root == null) {
             root = new Node(key, value);
             size = 1;
         }
-        putHelper(key, value , root);
+        putHelper(key, value, root);
     }
 
     /* Returns the number of key-value mappings in this map. */
@@ -102,18 +116,21 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
 
     /* Returns a Set view of the keys contained in this map. */
-    private void KeySetHelper(Node n, Set<K> keyset) {
-        if (n.left == null) keyset.add(n.key);
-        else {
-            KeySetHelper(n.left, keyset);
+    private void keySetHelper(Node n, Set<K> keyset) {
+        if (n.left == null) {
+            keyset.add(n.key);
+        } else {
+            keySetHelper(n.left, keyset);
             keyset.add(n.key);
         }
-        if (n.right != null) KeySetHelper(n.right, keyset);
+        if (n.right != null) {
+            keySetHelper(n.right, keyset);
+        }
     }
     @Override
     public Set<K> keySet() {
         Set<K> keyset = new HashSet<>();
-        KeySetHelper(root, keyset);
+        keySetHelper(root, keyset);
         return keyset;
     }
 
@@ -122,16 +139,22 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      *  null on failed removal.
      */
     private V removeHelper(K key, Node n) {
-        if (n == null) return null;
+        if (n == null) {
+            return null;
+        }
         int cmp = key.compareTo(n.key);
-        if (cmp < 0) return removeHelper(key, n.left);
-        else if (cmp > 0) return removeHelper(key, n.right);
-        else {
-            if (n.right == null) n = n.left;
-            else if (n.left == null) n = n.right;
-            else {
+        if (cmp < 0) {
+            return removeHelper(key, n.left);
+        } else if (cmp > 0) {
+            return removeHelper(key, n.right);
+        } else {
+            if (n.right == null) {
+                n = n.left;
+            } else if (n.left == null) {
+                n = n.right;
+            } else {
                 Node t = n;
-                n = min(t);
+                n = min(t.right);
                 n.right = deleteMin(t.right);
                 n.left = t.left;
             }
@@ -140,17 +163,27 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return n.value;
     }
     private Node min(Node n) {
-        if (n.left != null) return min(n.left);
-        else return n;
+        if (n.left != null) {
+            return min(n.left);
+        } else {
+            return n;
+        }
     }
     private Node deleteMin(Node n) {
-        if (n.left == null) return n.right;
+        if (n.left == null) {
+            return n.right;
+        }
         n.left = deleteMin(n.left);
         return n;
     }
     @Override
     public V remove(K key) {
-        if (root == null ) return null;
+        if (key == null) {
+            throw new IllegalArgumentException("invalid key in remove(): null");
+        }
+        if (root == null) {
+            return null;
+        }
         return removeHelper(key, root);
     }
 
@@ -160,8 +193,12 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      **/
     @Override
     public V remove(K key, V value) {
-        if (key == null) throw new IllegalArgumentException("invalid key in remove(): null");
-        if (value == null) throw new IllegalArgumentException("invlid value in remove(): null");
+        if (key == null) {
+            throw new IllegalArgumentException("invalid key in remove(): null");
+        }
+        if (value == null) {
+            throw new IllegalArgumentException("invlid value in remove(): null");
+        }
         if (value == remove(key)) {
             return value;
         }
