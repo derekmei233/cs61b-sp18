@@ -2,6 +2,7 @@ package lab9tester;
 
 import static org.junit.Assert.*;
 
+import edu.princeton.cs.algs4.BST;
 import org.junit.Test;
 import lab9.BSTMap;
 

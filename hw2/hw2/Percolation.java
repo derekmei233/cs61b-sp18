@@ -7,8 +7,8 @@ public class Percolation {
     private final int units;
     private int numOfOpen;
     private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF uf4full;
     private int[] sites;
-    private int[] full;
     private int flag;
 
     public Percolation(int N) throws IllegalArgumentException {
@@ -18,10 +18,18 @@ public class Percolation {
         }
         units = N;
         numOfOpen = 0;
-        uf = new WeightedQuickUnionUF(units * units);
+        uf = new WeightedQuickUnionUF(units * units + 2);
+        uf4full = new WeightedQuickUnionUF(units * units + 1);
         sites = new int[units * units];
-        full = new int[units * units];
         flag = 0;
+        // uf: units * units is the index for virtual top node
+        // and units * units + 1 is the index for virtual bottom node.
+        // uf4full: units * units is the index for virtual top node.
+        for (int i = 0; i < units; i++) {
+            uf.union(i, units * units);
+            uf.union(i + units * (units - 1), units * units + 1);
+            uf4full.union(i, units * units);
+        }
     }
 
     private void checkIndex(int row, int col) throws IndexOutOfBoundsException {
@@ -35,41 +43,21 @@ public class Percolation {
     }
 
     private void neighboring(int row, int col) {
-        int check = 0;
-        if ((row - 1 >= 0 && full[cordToIndex(row - 1, col)] == 1)
-                || (row + 1 <= units - 1 && full[cordToIndex(row + 1, col)] == 1)
-                || (col - 1 >= 0 && full[cordToIndex(row, col - 1)] == 1)
-                || (col + 1 <= units - 1 && full[cordToIndex(row, col + 1)] == 1)) {
-            check = 1;
-        }
-
         if (row - 1 >= 0 && sites[cordToIndex(row - 1, col)] == 1) {
             uf.union(cordToIndex(row - 1, col), cordToIndex(row, col));
-            if (check == 1) {
-                full[cordToIndex(row - 1, col)] = 1;
-                full[cordToIndex(row, col)] = 1;
-            }
+            uf4full.union(cordToIndex(row - 1, col), cordToIndex(row, col));
         }
         if (row + 1 <= units - 1 && sites[cordToIndex(row + 1, col)] == 1) {
             uf.union(cordToIndex(row + 1, col), cordToIndex(row, col));
-            if (check == 1) {
-                full[cordToIndex(row + 1, col)] = 1;
-                full[cordToIndex(row, col)] = 1;
-            }
+            uf4full.union(cordToIndex(row + 1, col), cordToIndex(row, col));
         }
         if (col - 1 >= 0 && sites[cordToIndex(row, col - 1)] == 1) {
             uf.union(cordToIndex(row, col - 1), cordToIndex(row, col));
-            if (check == 1) {
-                full[cordToIndex(row, col - 1)] = 1;
-                full[cordToIndex(row, col)] = 1;
-            }
+            uf4full.union(cordToIndex(row, col - 1), cordToIndex(row, col));
         }
         if (col + 1 <= units - 1 && sites[cordToIndex(row, col + 1)] == 1) {
             uf.union(cordToIndex(row, col + 1), cordToIndex(row, col));
-            if (check == 1) {
-                full[cordToIndex(row, col + 1)] = 1;
-                full[cordToIndex(row, col)] = 1;
-            }
+            uf4full.union(cordToIndex(row, col + 1), cordToIndex(row, col));
         }
     }
 
@@ -94,17 +82,7 @@ public class Percolation {
         if (sites[cordToIndex(row, col)] == 0) {
             return false;
         }
-        if (full[row * units + col] == 1) {
-            return true;
-        }
-        int pos = uf.find(cordToIndex(row, col));
-        for (int i = 0; i < units; i++) {
-            if (uf.find(i) == pos) {
-                full[row * units + col] = 1;
-                return true;
-            }
-        }
-        return false;
+        return uf4full.find(units * units) == uf4full.find(cordToIndex(row, col));
     }
     public int numberOfOpenSites() {
         // number of open sites
@@ -112,16 +90,10 @@ public class Percolation {
     }
     public boolean percolates() {
         // does the system percolate?
-        if (flag == 1) {
-            return true;
+        if (units == 1) {
+            return sites[cordToIndex(0, 0)] == 1;
         }
-        for (int i = 0; i < units; i++) {
-            if (isFull(units - 1, i)) {
-                flag = 1;
-                return true;
-            }
-        }
-        return false;
+        return uf.find(units * units) == uf.find(units * units + 1);
     }
     public static void main(String[] args) {
         // unittest here
