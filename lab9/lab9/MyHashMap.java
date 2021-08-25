@@ -43,7 +43,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         if (key == null) {
             return 0;
         }
-
         int numBuckets = buckets.length;
         return Math.floorMod(key.hashCode(), numBuckets);
     }
@@ -53,19 +52,49 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int target = hash(key);
+        if (buckets[target].containsKey(key)) return buckets[target].get(key);
+        else return null;
+    }
+    private void resize() {
+        int newsize = size;
+        ArrayMap<K, V>[] newbuckets = buckets;
+        buckets = new ArrayMap[2 * newbuckets.length];
+        this.clear();
+        int j;
+        for (ArrayMap<K, V> newbucket : newbuckets) {
+            for (K key : newbucket) {
+                j = hash(key);
+                buckets[j].put(key, newbucket.get(key));
+            }
+        }
+        size = newsize;
     }
 
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (key == null) throw new IllegalArgumentException("invalid key in put(): null");
+        if (value == null) throw new IllegalArgumentException("invalid value in put(): null");
+        int target = hash(key);
+        if (buckets[target].containsKey(key)) buckets[target].put(key, value);
+        else {
+            size++;
+            if (loadFactor() >= MAX_LF) {
+                resize();
+                int newtarget = hash(key);
+                buckets[newtarget].put(key, value);
+            }
+            else {
+                buckets[target].put(key, value);
+            }
+        }
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
