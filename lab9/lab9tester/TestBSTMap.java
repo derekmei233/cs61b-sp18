@@ -2,7 +2,6 @@ package lab9tester;
 
 import static org.junit.Assert.*;
 
-import edu.princeton.cs.algs4.BST;
 import org.junit.Test;
 import lab9.BSTMap;
 
@@ -13,14 +12,10 @@ public class TestBSTMap {
 
     @Test
     public void sanityGenericsTest() {
-        try {
-            BSTMap<String, String> a = new BSTMap<String, String>();
-            BSTMap<String, Integer> b = new BSTMap<String, Integer>();
-            BSTMap<Integer, String> c = new BSTMap<Integer, String>();
-            BSTMap<Boolean, Integer> e = new BSTMap<Boolean, Integer>();
-        } catch (Exception e) {
-            fail();
-        }
+        BSTMap<String, String> a = new BSTMap<String, String>();
+        BSTMap<String, Integer> b = new BSTMap<String, Integer>();
+        BSTMap<Integer, String> c = new BSTMap<Integer, String>();
+        BSTMap<Boolean, Integer> e = new BSTMap<Boolean, Integer>();
     }
 
     //assumes put/size/containsKey/get work
