@@ -16,6 +16,16 @@ public class TestNiceSpreadOomage {
             return;
         }
 
+        public boolean equals(Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (o == null || o.getClass() != this.getClass()) {
+                return false;
+            }
+            NiceSpreadOomage jo = (NiceSpreadOomage) o;
+            return jo.val == this.val;
+        }
         @Override
         public int hashCode() {
             return val;

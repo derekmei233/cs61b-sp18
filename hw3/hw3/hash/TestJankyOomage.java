@@ -15,7 +15,17 @@ public class TestJankyOomage {
         public void draw(double x, double y, double scalingFactor) {
             return;
         }
-
+        @Override
+        public boolean equals(Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (o == null || o.getClass() != this.getClass()) {
+                return false;
+            }
+            JankyOomage jo = (JankyOomage) o;
+            return jo.val == this.val;
+        }
         @Override
         public int hashCode() {
             return val;
