@@ -122,9 +122,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * UnsupportedOperationException. */
     @Override
     public V remove(K key) {
+        if (key == null) {
+            throw new IllegalArgumentException("invalid key ijn remove(): null");
+        }
         int target = hash(key);
         if (buckets[target].containsKey(key)) {
-            return buckets[target].get(key);
+            return buckets[target].remove(key);
         } else {
             return null;
         }
@@ -135,9 +138,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * throw an UnsupportedOperationException.*/
     @Override
     public V remove(K key, V value) {
+        if (key == null) {
+            throw new IllegalArgumentException("invalid key ijn remove(): null");
+        }
         int target = hash(key);
         if (buckets[target].containsKey(key) && buckets[target].get(key) == value) {
-            return buckets[target].get(key);
+            return buckets[target].remove(key, value);
         } else {
             return null;
         }

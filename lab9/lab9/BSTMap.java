@@ -138,17 +138,16 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      *  returns VALUE removed,
      *  null on failed removal.
      */
-    private V removeHelper(K key, Node n) {
+    private Node removeHelper(K key, Node n) {
         if (n == null) {
             return null;
         }
         int cmp = key.compareTo(n.key);
         if (cmp < 0) {
-            return removeHelper(key, n.left);
+            return n.left = removeHelper(key, n.left);
         } else if (cmp > 0) {
-            return removeHelper(key, n.right);
+            return n.right = removeHelper(key, n.right);
         } else {
-            V result = n.value;
             if (n.right == null) {
                 n = n.left;
             } else if (n.left == null) {
@@ -160,7 +159,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
                 n.left = t.left;
             }
             size -= 1;
-            return result;
+            return n;
         }
     }
     private Node min(Node n) {
@@ -185,7 +184,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (root == null) {
             return null;
         }
-        return removeHelper(key, root);
+        V result = get(key);
+        root = removeHelper(key, root);
+        return result;
     }
 
     /** Removes the key-value entry for the specified key only if it is
