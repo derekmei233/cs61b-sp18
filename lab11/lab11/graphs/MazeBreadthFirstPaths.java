@@ -2,7 +2,6 @@ package lab11.graphs;
 
 import edu.princeton.cs.algs4.Queue;
 
-import java.lang.annotation.Target;
 
 /**
  *  @author Josh Hug
@@ -34,7 +33,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
         marked[s] = true;
         queue.enqueue(s);
         int temp;
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             temp = queue.dequeue();
             if (temp == t) {
                 targetFound = true;
@@ -57,7 +56,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
 
     @Override
     public void solve() {
-         bfs();
+        bfs();
     }
 }
 
