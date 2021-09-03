@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.MinPQ;
 import java.util.*;
 
 public class Solver {
-    static class WorldSequence implements Iterable<WorldState> {
+    private static class WorldSequence implements Iterable<WorldState> {
         private ArrayList<WorldState> worlds;
         public WorldSequence() {
             worlds = new ArrayList<>();
@@ -34,7 +34,7 @@ public class Solver {
             return new worldIterator();
         }
     }
-    public static class myComparator implements Comparator<WorldState> {
+    private static class myComparator implements Comparator<WorldState> {
         public int compare(WorldState i, WorldState j) {
             return Integer.compare(computeDistance(i), computeDistance(j));
         }

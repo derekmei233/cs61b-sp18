@@ -5,8 +5,9 @@ import edu.princeton.cs.algs4.Queue;
 public class Board implements  WorldState {
     private int[][] state;
     private int N;
-    private final int col;
-    private final int row;
+    private int col;
+    private int row;
+    private int goal[][];
     private int[][] makeGoal() {
         int count = 1;
         int[][] goal = new int[N][N];
@@ -19,19 +20,18 @@ public class Board implements  WorldState {
         return goal;
     }
     public Board(int[][] tiles){
-        int N = tiles.length;
+        N = tiles.length;
         state = new int[N][N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
+                state[i][j] = tiles[i][j];
                 if (state[i][j] == 0) {
                     row = i;
                     col = j;
-                    return;
                 }
             }
         }
-        col = -1;
-        row = -1;
+        goal = makeGoal();
     }
     public int tileAt(int i, int j){
         if (j < 0 || j >= N || i < 0 || i >= N) {
@@ -100,7 +100,6 @@ public class Board implements  WorldState {
         return neighbors;
     }
     public int hamming() {
-        int[][] goal = makeGoal();
         int err = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -116,7 +115,7 @@ public class Board implements  WorldState {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 int cur = state[i][j];
-                if (cur != 0 ) {
+                if (cur != 0) {
                     int r = cur / N;
                     int c = (cur - 1) % N;
                     err += (Math.abs(i - r)) + (Math.abs(j - c));
@@ -126,7 +125,7 @@ public class Board implements  WorldState {
         return err;
     }
     public int estimatedDistanceToGoal() {
-
+        return hamming();
     }
     public boolean equals(Object y) {
         if (this == y) {
