@@ -103,7 +103,7 @@ public class Board implements  WorldState {
         int err = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (state[i][j] != goal[i][j]) {
+                if (state[i][j] != goal[i][j] && state[i][j] != 0) {
                     err += 1;
                 }
             }
@@ -116,7 +116,7 @@ public class Board implements  WorldState {
             for (int j = 0; j < N; j++) {
                 int cur = state[i][j];
                 if (cur != 0) {
-                    int r = cur / N;
+                    int r = (cur - 1) / N;
                     int c = (cur - 1) % N;
                     err += (Math.abs(i - r)) + (Math.abs(j - c));
                 }
@@ -125,7 +125,7 @@ public class Board implements  WorldState {
         return err;
     }
     public int estimatedDistanceToGoal() {
-        return hamming();
+        return manhattan();
     }
     public boolean equals(Object y) {
         if (this == y) {
