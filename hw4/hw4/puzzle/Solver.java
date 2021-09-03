@@ -7,12 +7,12 @@ import java.util.*;
 public class Solver {
     private static class WorldSequence implements Iterable<WorldState> {
         private ArrayList<WorldState> worlds;
-        public WorldSequence() {
+        WorldSequence() {
             worlds = new ArrayList<>();
         }
-        class worldIterator implements Iterator<WorldState> {
+        class WorldIterator implements Iterator<WorldState> {
             int pos;
-            public worldIterator() {
+            WorldIterator() {
                 pos = worlds.size() - 1;
             }
             public boolean hasNext() {
@@ -31,10 +31,10 @@ public class Solver {
             worlds.add(w);
         }
         public Iterator<WorldState> iterator() {
-            return new worldIterator();
+            return new WorldIterator();
         }
     }
-    private static class myComparator implements Comparator<WorldState> {
+    private static class MyComparator implements Comparator<WorldState> {
         public int compare(WorldState i, WorldState j) {
             return Integer.compare(computeDistance(i), computeDistance(j));
         }
@@ -47,7 +47,7 @@ public class Solver {
     private static HashSet<WorldState> visited;
     public Solver(WorldState initial) {
         ws = new WorldSequence();
-        minPQ = new MinPQ<>(new myComparator());
+        minPQ = new MinPQ<>(new MyComparator());
         marker = new HashMap<>();
         linker = new HashMap<>();
         visited = new HashSet<>();
@@ -69,8 +69,8 @@ public class Solver {
 
             for (WorldState neighbor: cur.neighbors()) {
                 if (!visited.contains(neighbor)) {
-                    if (marker.containsKey(neighbor) &&
-                            (marker.get(neighbor) > (marker.get(cur) + 1))) {
+                    if (marker.containsKey(neighbor)
+                            && (marker.get(neighbor) > (marker.get(cur) + 1))) {
                         rearrange(neighbor, cur);
                     } else if (!marker.containsKey(neighbor)) {
                         linker.put(neighbor, cur);
@@ -97,7 +97,7 @@ public class Solver {
     }
     private void rearrange(WorldState neighbor, WorldState cur) {
         // no priority changing operation in MinPQ
-        MinPQ<WorldState> tmp = new MinPQ<>(new myComparator());
+        MinPQ<WorldState> tmp = new MinPQ<>(new MyComparator());
         while (!minPQ.isEmpty()) {
             WorldState wq = minPQ.delMin();
             if (wq.equals(neighbor)) {

@@ -7,10 +7,10 @@ public class Board implements  WorldState {
     private int N;
     private int col;
     private int row;
-    private int goal[][];
+    private int[][] goal;
     private int[][] makeGoal() {
         int count = 1;
-        int[][] goal = new int[N][N];
+        goal = new int[N][N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 goal[i][j] = count % (N * N);
@@ -19,7 +19,7 @@ public class Board implements  WorldState {
         }
         return goal;
     }
-    public Board(int[][] tiles){
+    public Board(int[][] tiles) {
         N = tiles.length;
         state = new int[N][N];
         for (int i = 0; i < N; i++) {
@@ -33,7 +33,7 @@ public class Board implements  WorldState {
         }
         goal = makeGoal();
     }
-    public int tileAt(int i, int j){
+    public int tileAt(int i, int j) {
         if (j < 0 || j >= N || i < 0 || i >= N) {
             throw new IndexOutOfBoundsException();
         }
@@ -146,11 +146,11 @@ public class Board implements  WorldState {
     }
     public String toString() {
         StringBuilder s = new StringBuilder();
-        int N = size();
-        s.append(N + "\n");
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+        int tN = size();
+        s.append(tN + "\n");
+        for (int i = 0; i < tN; i++) {
+            for (int j = 0; j < tN; j++) {
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
