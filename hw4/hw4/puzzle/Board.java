@@ -42,48 +42,17 @@ public class Board implements  WorldState {
     public int size() {
         return N;
     }
-    @Override
-    public Iterable<WorldState> neighbors() {
-        Queue<WorldState> neighbors = new Queue<>();
-        int hug = size();
-        int bug = -1;
-        int zug = -1;
-        for (int rug = 0; rug < hug; rug++) {
-            for (int tug = 0; tug < hug; tug++) {
-                if (tileAt(rug, tug) == 0) {
-                    bug = rug;
-                    zug = tug;
-                }
-            }
-        }
-        int[][] ili1li1 = new int[hug][hug];
-        for (int pug = 0; pug < hug; pug++) {
-            for (int yug = 0; yug < hug; yug++) {
-                ili1li1[pug][yug] = tileAt(pug, yug);
-            }
-        }
-        for (int l11il = 0; l11il < hug; l11il++) {
-            for (int lil1il1 = 0; lil1il1 < hug; lil1il1++) {
-                if (Math.abs(-bug + l11il) + Math.abs(lil1il1 - zug) - 1 == 0) {
-                    ili1li1[bug][zug] = ili1li1[l11il][lil1il1];
-                    ili1li1[l11il][lil1il1] = 0;
-                    Board neighbor = new Board(ili1li1);
-                    neighbors.enqueue(neighbor);
-                    ili1li1[l11il][lil1il1] = ili1li1[bug][zug];
-                    ili1li1[bug][zug] = 0;
-                }
-            }
-        }
-        return neighbors;
-    }
     private Board copySwap(int or, int oc, int dr, int dc) {
         Board newBoard = new Board(state);
         int tmp = newBoard.state[or][oc];
         newBoard.state[or][oc] = newBoard.state[dr][dc];
         newBoard.state[dr][dc] = tmp;
+        newBoard.col = dc;
+        newBoard.row = dr;
         return newBoard;
     }
-    public Iterable<WorldState> myNeighbors() {
+    @Override
+    public Iterable<WorldState> neighbors() {
         Queue<WorldState> neighbors = new Queue<>();
         if (row - 1 >= 0) {
             neighbors.enqueue(this.copySwap(row, col, row - 1, col));
@@ -127,6 +96,10 @@ public class Board implements  WorldState {
     public int estimatedDistanceToGoal() {
         return manhattan();
     }
+
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
     public boolean equals(Object y) {
         if (this == y) {
             return true;
@@ -135,6 +108,9 @@ public class Board implements  WorldState {
             return false;
         }
         Board by = (Board) y;
+        if (this.col != by.col || this.row != by.row) {
+            return false;
+        }
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if (by.state[i][j] != this.state[i][j]) {
