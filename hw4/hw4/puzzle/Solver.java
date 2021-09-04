@@ -116,7 +116,7 @@ public class Solver {
             minPQ.insert(tmp.delMin());
         }
     }
-    public int moves() {
+    public static int moves() {
         return ws.size() - 1;
     }
     public Iterable<WorldState> solution() {

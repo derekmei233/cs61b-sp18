@@ -104,11 +104,14 @@ public class Board implements  WorldState {
         if (this == y) {
             return true;
         }
-        if (y.getClass() != this.getClass()) {
+        if (y.getClass() != this.getClass() || y.getClass() == null) {
             return false;
         }
         Board by = (Board) y;
         if (this.col != by.col || this.row != by.row) {
+            return false;
+        }
+        if (this.N != by.N) {
             return false;
         }
         for (int i = 0; i < N; i++) {
