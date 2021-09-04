@@ -37,17 +37,17 @@ public class Solver {
             return new WorldIterator();
         }
     }
-    private static class MyComparator implements Comparator<WorldState> {
+    private class MyComparator implements Comparator<WorldState> {
         public int compare(WorldState i, WorldState j) {
             return Integer.compare(computeDistance(i), computeDistance(j));
         }
     }
-    private static WorldSequence ws;
-    private static MinPQ<WorldState> minPQ;
-    private static HashMap<WorldState, Integer> marker;
-    private static HashMap<WorldState, WorldState> linker;
-    private static HashMap<WorldState, Integer> mem;
-    private static HashSet<WorldState> visited;
+    private  WorldSequence ws;
+    private  MinPQ<WorldState> minPQ;
+    private  HashMap<WorldState, Integer> marker;
+    private  HashMap<WorldState, WorldState> linker;
+    private  HashMap<WorldState, Integer> mem;
+    private  HashSet<WorldState> visited;
     public Solver(WorldState initial) {
         ws = new WorldSequence();
         minPQ = new MinPQ<>(new MyComparator());
@@ -85,7 +85,7 @@ public class Solver {
         }
         System.out.println("wrong way");
     }
-    private static int computeDistance(WorldState w) {
+    private int computeDistance(WorldState w) {
         if (!mem.containsKey(w)) {
             mem.put(w, w.estimatedDistanceToGoal());
         }
@@ -100,6 +100,7 @@ public class Solver {
     }
     private void rearrange(WorldState neighbor, WorldState cur) {
         // no priority changing operation in MinPQ
+        System.out.println("rearrage");
         MinPQ<WorldState> tmp = new MinPQ<>(new MyComparator());
         while (!minPQ.isEmpty()) {
             WorldState wq = minPQ.delMin();
@@ -116,7 +117,7 @@ public class Solver {
             minPQ.insert(tmp.delMin());
         }
     }
-    public static int moves() {
+    public int moves() {
         return ws.size() - 1;
     }
     public Iterable<WorldState> solution() {

@@ -101,13 +101,17 @@ public class Board implements  WorldState {
         return this.toString().hashCode();
     }
     public boolean equals(Object y) {
+        if (this == null || y == null) {
+            return false;
+        }
         if (this == y) {
             return true;
         }
-        if (y.getClass() != this.getClass() || y.getClass() == null) {
+        if (y.getClass() != this.getClass()) {
             return false;
         }
         Board by = (Board) y;
+
         if (this.col != by.col || this.row != by.row) {
             return false;
         }
