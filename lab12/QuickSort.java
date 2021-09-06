@@ -75,8 +75,7 @@ public class QuickSort {
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        items = quickSortHelper(items);
-        return items;
+        return quickSortHelper(items);
     }
     public static void main(String[] args) {
         Queue<String> students = new Queue<>();
