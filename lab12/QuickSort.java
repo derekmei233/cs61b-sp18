@@ -47,13 +47,51 @@ public class QuickSort {
     private static <Item extends Comparable> void partition(
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
-        // Your code here!
+        while (!unsorted.isEmpty()) {
+            Item cur = unsorted.dequeue();
+            if (cur.compareTo(pivot) < 0) {
+                less.enqueue(cur);
+            } else if (cur.compareTo(pivot) > 0) {
+                greater.enqueue(cur);
+            } else {
+                equal.enqueue(cur);
+            }
+        }
+    }
+    private static <Item extends Comparable> Queue<Item> quickSortHelper(Queue<Item> unsorted) {
+        if (unsorted.size() <= 1) {
+            return unsorted;
+        }
+        Item pivot = getRandomItem(unsorted);
+        Queue<Item> greater = new Queue<>();
+        Queue<Item> equal = new Queue<>();
+        Queue<Item> less = new Queue<>();
+        partition(unsorted, pivot, less, equal, greater);
+        Queue<Item> lt = quickSortHelper(less);
+        Queue<Item> gt = quickSortHelper(greater);
+        return catenate(catenate(lt, equal), gt);
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        // Your code here!
+        items = quickSortHelper(items);
         return items;
+    }
+    public static void main(String[] args) {
+        Queue<String> students = new Queue<>();
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        students.enqueue("Zoey");
+        students.enqueue("Michael");
+        students.enqueue("Michael");
+        students = quickSort(students);
+        System.out.println(students.dequeue());
+        System.out.println(students.dequeue());
+        System.out.println(students.dequeue());
+        System.out.println(students.dequeue());
+        System.out.println(students.dequeue());
+        System.out.println(students.dequeue());
     }
 }
