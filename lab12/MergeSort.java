@@ -84,11 +84,14 @@ public class MergeSort {
         if (items.size() <= 1) {
             return items;
         }
-        Queue<Queue<Item>> sq = makeSingleItemQueues(items);
+        Queue<Item> newItems = new Queue<>();
+        for (Item i: items) {
+            newItems.enqueue(i);
+        }
+        Queue<Queue<Item>> sq = makeSingleItemQueues(newItems);
         Queue<Queue<Item>> rq = mergeSortHelper(sq);
         return rq.dequeue();
     }
-
     public static void main(String[] args) {
         Queue<String> students = new Queue<>();
         students.enqueue("alpha");
@@ -97,8 +100,16 @@ public class MergeSort {
         students.enqueue("theta");
         students.enqueue("undefined");
         students.enqueue("beta");
+        students.enqueue("alpha");
+        students.enqueue("phi");
+        students.enqueue("gamma");
+        students.enqueue("theta");
+        students.enqueue("undefined");
+        students.enqueue("beta");
         Queue<String> sorted = mergeSort(students);
         System.out.println(sorted);
+        System.out.println("------------");
+        System.out.println(students);
     }
 }
 

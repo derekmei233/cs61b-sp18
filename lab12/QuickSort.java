@@ -75,7 +75,11 @@ public class QuickSort {
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        return quickSortHelper(items);
+        Queue<Item> newItems = new Queue<>();
+        for (Item i: items) {
+            newItems.enqueue(i);
+        }
+        return quickSortHelper(newItems);
     }
     public static void main(String[] args) {
         Queue<String> students = new Queue<>();
@@ -87,5 +91,7 @@ public class QuickSort {
         students.enqueue("beta");
         Queue<String> sorted = quickSort(students);
         System.out.println(sorted);
+        System.out.println("------------");
+        System.out.println(students);
     }
 }
