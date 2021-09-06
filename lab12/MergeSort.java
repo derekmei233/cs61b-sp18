@@ -91,19 +91,14 @@ public class MergeSort {
 
     public static void main(String[] args) {
         Queue<String> students = new Queue<>();
-        students.enqueue("Alice");
-        students.enqueue("Vanessa");
-        students.enqueue("Ethan");
-        students.enqueue("Zoey");
-        students.enqueue("Michael");
-        students.enqueue("Michael");
-        students = mergeSort(students);
-        System.out.println(students.dequeue());
-        System.out.println(students.dequeue());
-        System.out.println(students.dequeue());
-        System.out.println(students.dequeue());
-        System.out.println(students.dequeue());
-        System.out.println(students.dequeue());
+        students.enqueue("alpha");
+        students.enqueue("phi");
+        students.enqueue("gamma");
+        students.enqueue("theta");
+        students.enqueue("undefined");
+        students.enqueue("beta");
+        Queue<String> sorted = mergeSort(students);
+        System.out.println(sorted);
     }
 }
 
