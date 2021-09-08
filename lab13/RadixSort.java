@@ -22,14 +22,12 @@ public class RadixSort {
      */
     public static String[] sort(String[] asciis) {
         String[] result = asciis.clone();
+
         int max = maxLength(asciis);
-        /*
         for (int i = 0; i < max; i++) {
             result = sortHelperLSD(result, i);
         }
-        return result;
-         */
-        sortHelperMSD(result, 0, asciis.length, 0);
+        //sortHelperMSD(result, 0, asciis.length, 0);
         return result;
     }
     private static int maxLength(String[] asciis) {
@@ -151,7 +149,7 @@ public class RadixSort {
     public static void main(String[] args) {
         // test case is borrowed from https://github.com/ema00/
         // Berkeley-CS61B-sp18/blob/master/lab13/RadixSort.java
-        String[] unsorted0 = {"blala", "asdasc", "fdsd", "eef", "e", "aaaaaaaaaaa"};
+        String[] unsorted0 = {"blala", "asdasc", "fdsd", "eef", "e", "aaaaa", "eea", " s"};
         String[] unsorted1 = {"b", "c", "f", "e", "d", "a"};
         String[] unsorted2 = {"ba", "ca", "fa", "ea", "da", "aa"};
         String[] unsorted3 = {"ab", "ac", "af", "ae", "ad", "aa"};
