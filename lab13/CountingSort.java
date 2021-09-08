@@ -66,7 +66,27 @@ public class CountingSort {
      * @param arr int array that will be sorted
      */
     public static int[] betterCountingSort(int[] arr) {
-        // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < arr.length; i++) {
+            min = arr[i] < min ? arr[i] : min;
+            max = arr[i] > max ? arr[i] : max;
+        }
+        int[] count = new int[max - min + 1];
+        for (int i: arr) {
+            count[i - min] += 1;
+        }
+        int[] start = new int[max - min + 1];
+        int accumulator = 0;
+        for (int idx = 0; idx < count.length; idx++) {
+            start[idx] = accumulator;
+            accumulator += count[idx];
+        }
+        int[] sorted = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            sorted[start[arr[i] - min]] = arr[i] - min;
+            start[arr[i] - min] += 1;
+        }
+        return sorted;
     }
 }
