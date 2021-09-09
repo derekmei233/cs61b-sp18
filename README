@@ -13,3 +13,5 @@ proj0 to lab4 is transformed from sp2019 version.
 #lab10 -> cleared
 #lab11 -> cleared
 #hw4 -> finished -> cannot pass ooperation count test due to MinPQ's unsupport of changing priority operations ->
+#lab12 -> cleared
+#lab13 -> cleared -> LSD exceed run time limit, but MSD paased. 
