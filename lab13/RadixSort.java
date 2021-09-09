@@ -22,11 +22,13 @@ public class RadixSort {
      */
     public static String[] sort(String[] asciis) {
         String[] result = asciis.clone();
-        int max = maxLength(asciis);
-        for (int i = 0; i < max; i++) {
-            result = sortHelperLSD(result, i);
-        }
-        //sortHelperMSD(result, 0, asciis.length, 0);
+        /*
+         int max = maxLength(asciis);
+         for (int i = 0; i < max; i++) {
+             result = sortHelperLSD(result, i);
+         }
+        */
+        sortHelperMSD(result, 0, asciis.length, 0);
         return result;
     }
     private static int maxLength(String[] asciis) {
