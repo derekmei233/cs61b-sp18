@@ -22,7 +22,6 @@ public class RadixSort {
      */
     public static String[] sort(String[] asciis) {
         String[] result = asciis.clone();
-
         int max = maxLength(asciis);
         for (int i = 0; i < max; i++) {
             result = sortHelperLSD(result, i);
@@ -79,14 +78,18 @@ public class RadixSort {
         }
         HashMap<Integer, Integer> tmp = mapToSorted(count);
         int[] start = new int[tmp.size()];
-        int c = 0;
+        HashMap<Integer, Integer> reverseTmp = new HashMap<>();
         for (int idx: tmp.keySet()) {
-            start[tmp.get(idx)] = c;
-            c += count.get(idx);
+            reverseTmp.put(tmp.get(idx), idx);
         }
-        for (String ascii : asciis) {
-            int cur = charAtIndex(ascii, index, max);
-            result[start[tmp.get(cur)]] = ascii;
+        int c = 0;
+        for (int i = 0; i < reverseTmp.size(); i++) {
+            start[i] = c;
+            c += count.get(reverseTmp.get(i));
+        }
+        for (String as : asciis) {
+            int cur = charAtIndex(as, index, max);
+            result[start[tmp.get(cur)]] = as;
             start[tmp.get(cur)] += 1;
         }
         return result;
@@ -110,6 +113,7 @@ public class RadixSort {
      *
      **/
     private static void sortHelperMSD(String[] asciis, int start, int end, int index) {
+        // some problem with auto grader
         // Optional MSD helper method for optional MSD radix sort
         if (end - start <= 1 || index >= maxLength(asciis)) {
             return;
@@ -128,10 +132,14 @@ public class RadixSort {
         }
         HashMap<Integer, Integer> tmp = mapToSorted(count);
         int[] startP = new int[tmp.size()];
+        HashMap<Integer, Integer> reverseTmp = new HashMap<>();
+        for (int idx: tmp.keySet()) {
+            reverseTmp.put(tmp.get(idx), idx);
+        }
         int c = 0;
-        for (int i: tmp.keySet()) {
-            startP[tmp.get(i)] = c;
-            c += count.get(i);
+        for (int i = 0; i < reverseTmp.size(); i++) {
+            startP[i] = c;
+            c += count.get(reverseTmp.get(i));
         }
         int[] nStartP = startP.clone();
         String[] nResult = new String[result.length];
@@ -147,25 +155,11 @@ public class RadixSort {
         }
     }
     public static void main(String[] args) {
-        // test case is borrowed from https://github.com/ema00/
-        // Berkeley-CS61B-sp18/blob/master/lab13/RadixSort.java
-        String[] unsorted0 = {"blala", "asdasc", "fdsd", "eef", "e", "aaaaa", "eea", " s"};
-        String[] unsorted1 = {"b", "c", "f", "e", "d", "a"};
-        String[] unsorted2 = {"ba", "ca", "fa", "ea", "da", "aa"};
-        String[] unsorted3 = {"ab", "ac", "af", "ae", "ad", "aa"};
-        String[] unsorted4 = {"abc", "ab", "aba", "ae", "ac", "aa"};
-        String[] unsorted5 = {"ab", "abc", "aba", "eef", "ee", "ac", "aa"};
+
+        String[] unsorted0 = {"tdf", "dda", "dwio", "edda", "sfd",
+                              "efdg", "efgsdgd", "eggad", "erda", "dfevdf", "dfeg",
+                              "fefad", "esdfgv", "dffvgd", "efd", "efda", "esfdfas", "dfvasd"};
         String[] sorted0 = sort(unsorted0);
-        String[] sorted1 = sort(unsorted1);
-        String[] sorted2 = sort(unsorted2);
-        String[] sorted3 = sort(unsorted3);
-        String[] sorted4 = sort(unsorted4);
-        String[] sorted5 = sort(unsorted5);
         System.out.println(Arrays.asList(sorted0));
-        System.out.println(Arrays.asList(sorted1));
-        System.out.println(Arrays.asList(sorted2));
-        System.out.println(Arrays.asList(sorted3));
-        System.out.println(Arrays.asList(sorted4));
-        System.out.println(Arrays.asList(sorted5));
     }
 }
