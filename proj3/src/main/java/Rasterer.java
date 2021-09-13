@@ -8,9 +8,70 @@ import java.util.Map;
  * not draw the output correctly.
  */
 public class Rasterer {
+    private double[] longDPPList;
+    private double[] latDPPList;
+
+    private void calculateLongDPPlist() {
+        longDPPList = new double[8];
+        latDPPList = new double[8];
+        double distanceLong = MapServer.ROOT_LRLON - MapServer.ROOT_ULLON;
+        double distanceLat = MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT;
+        for (int i = 0; i < 8; i++) {
+            longDPPList[i] = distanceLong / (Math.pow(2, i) * 256);
+            latDPPList[i] = distanceLat / (Math.pow(2, i) * 256);
+        }
+    }
+    private boolean checkSuccess(double ullong, double lrlong, double ullat, double lrlat) {
+        return !(ullong >= MapServer.ROOT_LRLON) && !(lrlong <= MapServer.ROOT_ULLON)
+                && !(ullat <= MapServer.ROOT_LRLAT) && !(lrlat >= MapServer.ROOT_ULLAT);
+    }
+    private int resolutionSolver(double threshold) {
+        for (int i = 0; i < longDPPList.length; i++) {
+            if (threshold >= longDPPList[i]) {
+                return i;
+            }
+        }
+        return 7;
+    }
+    private int[] gridParamProvider(double ullong, double lrlong, double ullat, double lrlat,
+                                    int depth) {
+        double stepLong = longDPPList[depth] * 256;
+        double stepLat = latDPPList[depth] * 256;
+        int[] param = new int[4];
+        param[0] = (int) Math.floor(-(MapServer.ROOT_ULLON - ullong) / stepLong);
+        param[1] = (int) Math.ceil(-(MapServer.ROOT_ULLON - lrlong) / stepLong);
+        param[2] = (int) Math.floor((MapServer.ROOT_ULLAT - ullat) / stepLat);
+        param[3] = (int) Math.ceil((MapServer.ROOT_ULLAT - lrlat) / stepLat);
+        return param;
+    }
+    private String[][] synthesisGrid(int lonb, int lone, int latb, int late, int depth) {
+        String[][] result = new String[late - latb][lone - lonb];
+        for (int row = latb; row < late; row++) {
+            for (int col = lonb; col < lone; col++) {
+                result[row - latb][col - lonb] = String.format("d%d_x%d_y%d.png", depth, col, row);
+            }
+        }
+        return result;
+    }
+    private Map<String, Double> calculateUL(int x, int y, int depth) {
+        double uLLon = MapServer.ROOT_ULLON + x * longDPPList[depth] * 256;
+        double uLLat = MapServer.ROOT_ULLAT - y * latDPPList[depth] * 256;
+        Map<String, Double> result = new HashMap<>();
+        result.put("Lon", uLLon);
+        result.put("Lat", uLLat);
+        return result;
+    }
+    private Map<String, Double> calculateLR(int x, int y, int depth) {
+        double lRLon = MapServer.ROOT_ULLON + (x + 1) * longDPPList[depth] * 256;
+        double lRLat = MapServer.ROOT_ULLAT - (y + 1) * latDPPList[depth] * 256;
+        Map<String, Double> result = new HashMap<>();
+        result.put("Lon", lRLon);
+        result.put("Lat", lRLat);
+        return result;
+    }
 
     public Rasterer() {
-        // YOUR CODE HERE
+        calculateLongDPPlist();
     }
 
     /**
@@ -42,11 +103,23 @@ public class Rasterer {
      *                    forget to set this to true on success! <br>
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-        // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
+        int depth = resolutionSolver(-(params.get("ullon") - params.get("lrlon"))
+                / params.get("w"));
+        boolean querySuccess = checkSuccess(params.get("ullon"), params.get("lrlon"),
+                params.get("ullat"), params.get("lrlat"));
+        int[] p = gridParamProvider(params.get("ullon"), params.get("lrlon"),
+                params.get("ullat"), params.get("lrlat"), depth);
+        String[][] renderGrid = synthesisGrid(p[0], p[1], p[2], p[3], depth);
+        Map<String, Double> rasterUl = calculateUL(p[0], p[2], depth);
+        Map<String, Double> rasterLr = calculateLR(p[1] - 1, p[3] - 1, depth);
+        results.put("query_success", querySuccess);
+        results.put("depth", depth);
+        results.put("raster_ul_lon", rasterUl.get("Lon"));
+        results.put("raster_ul_lat", rasterUl.get("Lat"));
+        results.put("raster_lr_lon", rasterLr.get("Lon"));
+        results.put("raster_lr_lat", rasterLr.get("Lat"));
+        results.put("render_grid", renderGrid);
         return results;
     }
-
 }

@@ -154,5 +154,4 @@ public class TestRasterer {
 
         return sj.toString();
     }
-
 }
