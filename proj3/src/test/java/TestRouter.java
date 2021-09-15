@@ -27,7 +27,6 @@ public class TestRouter {
         graph = new GraphDB(OSM_DB_PATH);
         initialized = true;
     }
-
     @Test
     public void testShortestPath() throws Exception {
         List<Map<String, Double>> testParams = paramsFromFile();
