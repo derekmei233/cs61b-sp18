@@ -19,7 +19,7 @@ public class Router {
     static class NodeComparator implements Comparator<Long> {
         private final GraphDB g;
         private long refID;
-        public NodeComparator(GraphDB pg, double destlat, double destlon) {
+        NodeComparator(GraphDB pg, double destlat, double destlon) {
             g = pg;
             refID = g.closest(destlat, destlon);
         }
