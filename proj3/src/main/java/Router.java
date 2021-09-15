@@ -21,13 +21,13 @@ public class Router {
         private long refID;
         NodeComparator(GraphDB pg, double destlat, double destlon) {
             g = pg;
-            refID = g.closest(destlat, destlon);
+            refID = g.closest(destlon, destlat);
         }
         @Override
         public int compare(Long o1, Long o2) {
-            double distanceO1 = g.distance(refID, o1) * 0.6 + steps.get(o1);
-            double distanceO2 = g.distance(refID, o2) * 0.6 + steps.get(o2);
-            if (distanceO2 < distanceO2) {
+            double distanceO1 = g.distance(refID, o1) * 1 + steps.get(o1);
+            double distanceO2 = g.distance(refID, o2) * 1 + steps.get(o2);
+            if (distanceO1 < distanceO2) {
                 return -1;
             } else if (distanceO1 > distanceO2) {
                 return 1;
