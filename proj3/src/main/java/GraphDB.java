@@ -7,6 +7,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -18,8 +20,121 @@ import java.util.ArrayList;
  * @author Alan Yao, Josh Hug
  */
 public class GraphDB {
-    /** Your instance variables for storing the graph. You should consider
-     * creating helper classes, e.g. Node, Edge, etc. */
+    private  Map<Long, Node> nodeList;
+    private Map<Long, Way> wayList;
+
+    public class Node {
+        long id;
+        double lat;
+        double lon;
+        int version;
+        ArrayList<Long> neighbors;
+        Map<String, String> tag;
+        Node(long pid, double plat, double plon, int pversion) {
+            id = pid;
+            lat = plat;
+            lon = plon;
+            version = pversion;
+            tag = new HashMap<>();
+            neighbors = new ArrayList<>();
+        }
+        public void addNeighbors(long pid) {
+            neighbors.add(pid);
+        }
+        public void addTag(String k, String v) {
+            tag.put(k, v);
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || o.getClass() != this.getClass()) {
+                return false;
+            }
+            if (o == this) {
+                return true;
+            }
+            Node no = (Node) o;
+            return no.id == this.id;
+        }
+        @Override
+        public int hashCode() {
+            String code = String.valueOf(lat) + String.valueOf(lon);
+            return code.hashCode();
+        }
+        @Override
+        public String toString() {
+            StringBuilder tmp = new StringBuilder();
+            tmp.append("Node id: ");
+            tmp.append(id);
+            tmp.append("\n");
+            tmp.append("lat: ");
+            tmp.append(lat);
+            tmp.append("\n");
+            tmp.append("lon: ");
+            tmp.append(lon);
+            tmp.append("\n");
+            return tmp.toString();
+        }
+    }
+    public class Way {
+        long id;
+        int version;
+        ArrayList<Long> way;
+        Map<String, String> tag;
+        public void addNeighbors(Node n, long stop) {
+            n.addNeighbors(stop);
+        }
+        public void constructConnectivity() {
+            // construct connection between every node in this Way object
+            for (int i = 0; i < way.size(); i++) {
+                if (i != 0) {
+                    addNeighbors(nodeList.get(way.get(i)), way.get(i - 1));
+                }
+                if (i != way.size() - 1) {
+                    addNeighbors(nodeList.get(way.get(i)), way.get(i + 1));
+                }
+            }
+        }
+        Way(long pid, int pversion) {
+            id = pid;
+            version = pversion;
+            way = new ArrayList<>();
+            tag = new HashMap<String, String>();
+        }
+        public void addStops(long pid) {
+            way.add(pid);
+        }
+        public void addTag(String k, String v) {
+            tag.put(k, v);
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || o.getClass() != this.getClass()) {
+                return false;
+            }
+            if (this == o) {
+                return true;
+            }
+            Way eo = (Way) o;
+            return eo.id == this.id;
+        }
+        @Override
+        public int hashCode() {
+            return String.valueOf(id).hashCode();
+        }
+        @Override
+        public String toString() {
+            StringBuilder tmp = new StringBuilder();
+            tmp.append("way id: ");
+            tmp.append(id);
+            tmp.append("\n");
+            for (long i : way) {
+                tmp.append(i);
+                tmp.append(" -> ");
+            }
+            tmp.append("End");
+            return tmp.toString();
+        }
+    }
 
     /**
      * Example constructor shows how to create and start an XML parser.
@@ -27,6 +142,8 @@ public class GraphDB {
      * @param dbPath Path to the XML file to be parsed.
      */
     public GraphDB(String dbPath) {
+        nodeList = new HashMap<>();
+        wayList = new HashMap<>();
         try {
             File inputFile = new File(dbPath);
             FileInputStream inputStream = new FileInputStream(inputFile);
@@ -40,6 +157,21 @@ public class GraphDB {
             e.printStackTrace();
         }
         clean();
+    }
+    public Node getNode(long pid) {
+        return nodeList.get(pid);
+    }
+    public void addNode(long pid, double plat, double plon, int pversion) {
+        nodeList.put(pid, new Node(pid, plat, plon, pversion));
+    }
+    public Node updateNode(long pid) {
+        return nodeList.get(pid);
+    }
+    public void addWay(long pid, int pversion) {
+        wayList.put(pid, new Way(pid, pversion));
+    }
+    public Way updateWay(long wid) {
+        return wayList.get(wid);
     }
 
     /**
@@ -58,6 +190,15 @@ public class GraphDB {
      */
     private void clean() {
         // TODO: Your code here.
+        ArrayList<Long> removeList = new ArrayList<>();
+        for (Node i: nodeList.values()) {
+            if (i.neighbors.size() == 0) {
+                removeList.add(i.id);
+            }
+        }
+        for (long l: removeList) {
+            nodeList.remove(l);
+        }
     }
 
     /**
@@ -65,8 +206,7 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return nodeList.keySet();
     }
 
     /**
@@ -75,7 +215,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return nodeList.get(v).neighbors;
     }
 
     /**
@@ -136,7 +276,15 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        long id = -1;
+        double minDistance = Double.MAX_VALUE;
+        for (Node i: nodeList.values()) {
+            if (distance(lon, lat, i.lon, i.lat) < minDistance) {
+                id = i.id;
+                minDistance = distance(lon, lat, i.lon, i.lat);
+            }
+        }
+        return id;
     }
 
     /**
@@ -145,7 +293,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return nodeList.get(v).lon;
     }
 
     /**
@@ -154,6 +302,6 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return nodeList.get(v).lat;
     }
 }

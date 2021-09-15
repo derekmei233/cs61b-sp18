@@ -1,5 +1,9 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.PriorityQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +16,43 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+    static class NodeComparator implements Comparator<Long> {
+        private final GraphDB g;
+        private long refID;
+        public NodeComparator(GraphDB pg, double destlat, double destlon) {
+            g = pg;
+            refID = g.closest(destlat, destlon);
+        }
+        @Override
+        public int compare(Long o1, Long o2) {
+            double distanceO1 = g.distance(refID, o1) * 0.5 + steps.get(o1);
+            double distanceO2 = g.distance(refID, o2) * 0.5 + steps.get(o2);
+            if (distanceO2 < distanceO2) {
+                return -1;
+            } else if (distanceO1 > distanceO2) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+    private static PriorityQueue<Long> minPQ;
+    private static HashMap<Long, Double> steps;
+    private static HashMap<Long, Long> connection;
+    private static ArrayList<Long> path;
+    private static ArrayList<Long> trace(long pid) {
+        path = new ArrayList<>();
+        path.add(pid);
+        while (connection.get(pid) != pid) {
+            pid = connection.get(pid);
+            path.add(pid);
+        }
+        ArrayList<Long> result = new ArrayList<>();
+        for (int i = 0; i < path.size(); i++) {
+            result.add(path.get(path.size() - i - 1));
+        }
+        return result;
+    }
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -25,6 +66,39 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
+        NodeComparator myComparator = new NodeComparator(g, destlat, destlon);
+        long endNode = g.closest(destlon, destlat);
+        minPQ = new PriorityQueue<>(myComparator);
+        connection = new HashMap<>();
+        steps = new HashMap<>();
+        long startNode = g.closest(stlon, stlat);
+        long last;
+        long cur = startNode;
+        connection.put(startNode, startNode);
+        steps.put(startNode, 0.0);
+        minPQ.add(cur);
+        while (!minPQ.isEmpty()) {
+            cur = minPQ.poll();
+            if (cur == endNode) {
+                path = trace(cur);
+                return path;
+            }
+            last = connection.get(cur);
+            steps.put(cur, steps.get(last) + g.distance(cur, last));
+            for (long l: g.adjacent(cur)) {
+
+                if (minPQ.contains(l) && steps.get(cur) + g.distance(l, cur) < steps.get(l)) {
+                    minPQ.remove(l);
+                    connection.put(l, cur);
+                    steps.put(l, steps.get(cur) + g.distance(l, cur));
+                    minPQ.add(l);
+                } else if (!steps.containsKey(l)) {
+                    steps.put(l, steps.get(cur) + g.distance(l, cur));
+                    connection.put(l, cur);
+                    minPQ.add(l);
+                }
+            }
+        }
         return null; // FIXME
     }
 
