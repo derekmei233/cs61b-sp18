@@ -25,8 +25,8 @@ public class Router {
         }
         @Override
         public int compare(Long o1, Long o2) {
-            double distanceO1 = g.distance(refID, o1) * 0.5 + steps.get(o1);
-            double distanceO2 = g.distance(refID, o2) * 0.5 + steps.get(o2);
+            double distanceO1 = g.distance(refID, o1) * 0.1 + steps.get(o1);
+            double distanceO2 = g.distance(refID, o2) * 0.1 + steps.get(o2);
             if (distanceO2 < distanceO2) {
                 return -1;
             } else if (distanceO1 > distanceO2) {
